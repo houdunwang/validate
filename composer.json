@@ -1,6 +1,6 @@
 {
   "name": "houdunwang/validate",
-  "description": "日志管理",
+  "description": "Validate组件提供了方便的验证机制，快速实现验证业务。",
   "type": "project",
   "keywords": [
     "houdunwang",
