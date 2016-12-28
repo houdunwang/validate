@@ -10,6 +10,7 @@
 namespace houdunwang\validate\build;
 
 use Closure;
+use houdunwang\config\Config;
 use houdunwang\session\Session;
 
 /**
@@ -109,16 +110,16 @@ class Base extends VaAction {
 	 * @param $errors
 	 */
 	public function respond( $errors ) {
+		//错误信息记录
+		Session::set( 'errors', $errors );
 		//验证返回信息处理
 		if ( count( $errors ) > 0 ) {
-			switch ( c( 'validate.dispose' ) ) {
+			switch ( Config::get( 'validate.dispose' ) ) {
 				case 'redirect':
-					//将错误信息记录到闪存
-					Session::flash( 'errors', $errors );
 					echo '<script>location.href="' . $_SERVER['HTTP_REFERER'] . '";</script>';
 					exit;
 				case 'show':
-					require c( 'validate.view' );
+					require Config::get( 'validate.view' );
 					exit;
 				case 'default':
 					break;
