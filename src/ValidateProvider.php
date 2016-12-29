@@ -9,9 +9,9 @@
  * '-------------------------------------------------------------------*/
 namespace houdunwang\validate;
 
-use hdphp\kernel\ServiceProvider;
+use houdunwang\framework\build\Provider;
 
-class ValidateProvider extends ServiceProvider {
+class ValidateProvider extends Provider {
 
 	//延迟加载
 	public $defer = true;

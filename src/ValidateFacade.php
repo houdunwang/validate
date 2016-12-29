@@ -9,9 +9,9 @@
  * '-------------------------------------------------------------------*/
 namespace houdunwang\validate;
 
-use hdphp\kernel\ServiceFacade;
+use houdunwang\framework\build\Facade;
 
-class ValidateFacade extends ServiceFacade {
+class ValidateFacade extends Facade {
 	public static function getFacadeAccessor() {
 		return 'Validate';
 	}

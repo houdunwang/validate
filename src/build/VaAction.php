@@ -87,7 +87,7 @@ class VaAction {
 	//网址验证
 	public function http( $name, $value, $params ) {
 		$preg
-			= "/^(http[s]?:)?(\/{2})?([a-z0-9]+\.)?[a-z0-9]+(\.(com|cn|cc|org|net|com.cn))$/i";
+			= "/^(http[s]?:)?(\/{2})?([a-z0-9]+\.)?[a-z0-9]+(\.(com|cn|cc|build|net|com.cn))$/i";
 		if ( preg_match( $preg, $value ) ) {
 			return true;
 		}

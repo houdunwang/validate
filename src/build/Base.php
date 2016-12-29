@@ -119,7 +119,7 @@ class Base extends VaAction {
 					echo '<script>location.href="' . $_SERVER['HTTP_REFERER'] . '";</script>';
 					exit;
 				case 'show':
-					require Config::get( 'validate.view' );
+					require Config::get( 'validate.template' );
 					exit;
 				case 'default':
 					break;
