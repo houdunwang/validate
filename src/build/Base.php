@@ -12,6 +12,7 @@ namespace houdunwang\validate\build;
 use Closure;
 use houdunwang\config\Config;
 use houdunwang\session\Session;
+use houdunwang\view\View;
 
 /**
  * 表单验证
@@ -119,7 +120,8 @@ class Base extends VaAction {
 					echo '<script>location.href="' . $_SERVER['HTTP_REFERER'] . '";</script>';
 					exit;
 				case 'show':
-					require Config::get( 'validate.template' );
+					View::with('errors',$errors);
+					echo View::make(Config::get( 'validate.template' ));
 					exit;
 				case 'default':
 					break;
