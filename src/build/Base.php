@@ -12,6 +12,7 @@ namespace houdunwang\validate\build;
 use Closure;
 use houdunwang\config\Config;
 use houdunwang\session\Session;
+use houdunwang\validate\Validate;
 use houdunwang\view\View;
 
 /**
@@ -21,16 +22,6 @@ use houdunwang\view\View;
  * @author 向军
  */
 class Base extends VaAction {
-	//有字段时验证
-	const EXISTS_VALIDATE = 1;
-	//值不为空时验证
-	const VALUE_VALIDATE = 2;
-	//必须验证
-	const MUST_VALIDATE = 3;
-	//值是空时处理
-	const VALUE_NULL = 4;
-	//不存在字段时处理
-	const NO_EXISTS_VALIDATE = 5;
 	//扩展验证规则
 	protected $validate = [ ];
 	//错误信息
@@ -49,22 +40,22 @@ class Base extends VaAction {
 
 		foreach ( $validates as $validate ) {
 			//验证条件
-			$validate[3] = isset( $validate[3] ) ? $validate[3] : self::MUST_VALIDATE;
-
-			if ( $validate[3] == self::EXISTS_VALIDATE && ! isset( $data[ $validate[0] ] ) ) {
+			$validate[3] = isset( $validate[3] ) ? $validate[3] : Validate::MUST_VALIDATE;
+			if ( $validate[3] == Validate::EXISTS_VALIDATE && ! isset( $data[ $validate[0] ] ) ) {
 				continue;
-			} else if ( $validate[3] == self::VALUE_VALIDATE && empty( $data[ $validate[0] ] ) ) {
+			} else if ( $validate[3] == Validate::VALUE_VALIDATE && empty( $data[ $validate[0] ] ) ) {
 				//不为空时处理
 				continue;
-			} else if ( $validate[3] == self::VALUE_NULL && ! empty( $data[ $validate[0] ] ) ) {
+			} else if ( $validate[3] == Validate::VALUE_NULL && ! empty( $data[ $validate[0] ] ) ) {
 				//值为空时处理
 				continue;
-			} else if ( $validate[3] == self::NO_EXISTS_VALIDATE && isset( $data[ $validate[0] ] ) ) {
+			} else if ( $validate[3] == Validate::NO_EXISTS_VALIDATE && isset( $data[ $validate[0] ] ) ) {
 				//值为空时处理
 				continue;
-			} else if ( $validate[3] == self::MUST_VALIDATE ) {
+			} else if ( $validate[3] == Validate::MUST_VALIDATE ) {
 				//必须处理
 			}
+
 			//表单值
 			$value = isset( $data[ $validate[0] ] ) ? $data[ $validate[0] ] : '';
 
@@ -100,17 +91,17 @@ class Base extends VaAction {
 		}
 
 		//验证返回信息处理
-		$this->respond( $this->error );
-
-		return $this;
+		return $this->respond( $this->error );
 	}
 
 	/**
 	 * 验证返回信息处理
 	 *
-	 * @param $errors
+	 * @param array $errors 错误内容
+	 *
+	 * @return bool
 	 */
-	public function respond( $errors ) {
+	public function respond( array $errors ) {
 		//错误信息记录
 		Session::set( 'errors', $errors );
 		//验证返回信息处理
@@ -120,13 +111,16 @@ class Base extends VaAction {
 					echo '<script>location.href="' . $_SERVER['HTTP_REFERER'] . '";</script>';
 					exit;
 				case 'show':
-					View::with('errors',$errors);
-					echo View::make(Config::get( 'validate.template' ));
+					View::with( 'errors', $errors );
+					echo View::make( Config::get( 'validate.template' ) );
 					exit;
 				case 'default':
+					return false;
 					break;
 			}
 		}
+
+		return true;
 	}
 
 	/**
