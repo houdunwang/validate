@@ -106,17 +106,22 @@ class Base extends VaAction {
 		Session::set( 'errors', $errors );
 		//验证返回信息处理
 		if ( count( $errors ) > 0 ) {
-			switch ( Config::get( 'validate.dispose' ) ) {
-				case 'redirect':
-					echo '<script>location.href="' . $_SERVER['HTTP_REFERER'] . '";</script>';
-					exit;
-				case 'show':
-					View::with( 'errors', $errors );
-					echo View::make( Config::get( 'validate.template' ) );
-					exit;
-				case 'default':
-					return false;
-					break;
+			if ( IS_AJAX ) {
+				$res = [ 'valid' => 0, 'message' => $errors ];
+				die( json_encode( $res, JSON_UNESCAPED_UNICODE ) );
+			} else {
+				switch ( Config::get( 'validate.dispose' ) ) {
+					case 'redirect':
+						echo '<script>location.href="' . $_SERVER['HTTP_REFERER'] . '";</script>';
+						exit;
+					case 'show':
+						View::with( 'errors', $errors );
+						echo View::make( Config::get( 'validate.template' ) );
+						exit;
+					case 'default':
+						return false;
+						break;
+				}
 			}
 		}
 

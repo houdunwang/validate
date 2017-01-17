@@ -10,18 +10,14 @@
 namespace houdunwang\validate\build;
 
 class VaAction {
-	/**
-	 * 字段不存在时验证失败
-	 *
-	 * @param $field 变量名
-	 * @param $value 变量值
-	 * @param $params 参数
-	 * @param $data 所有字段数据
-	 *
-	 * @return bool
-	 */
+	//字段为空时验证失败
+	public function isnull( $field, $value, $params, $data ) {
+		return empty( $data[ $field ] ) ?  false:true;
+	}
+
+	//验证字段是否存在
 	public function required( $field, $value, $params, $data ) {
-		return empty( $value ) ? false : true;
+		return isset( $data[ $field ] ) ? true : false;
 	}
 
 	//验证码验证
