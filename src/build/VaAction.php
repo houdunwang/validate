@@ -12,7 +12,8 @@ namespace houdunwang\validate\build;
 class VaAction {
 	//字段为空时验证失败
 	public function isnull( $field, $value, $params, $data ) {
-		if ( ! isset( $data[ $field ] ) || trim( $data[ $field ] ) == '') {
+
+		if ( ! isset( $data[ $field ] ) || $data[ $field ] == '' ) {
 			return false;
 		}
 
@@ -21,7 +22,7 @@ class VaAction {
 
 	//验证字段是否存在
 	public function required( $field, $value, $params, $data ) {
-		if ( ! isset( $data[ $field ] ) || trim( $data[ $field ] ) == '') {
+		if ( ! isset( $data[ $field ] ) || $data[ $field ] == '' ) {
 			return false;
 		}
 
