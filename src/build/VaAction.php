@@ -12,12 +12,20 @@ namespace houdunwang\validate\build;
 class VaAction {
 	//字段为空时验证失败
 	public function isnull( $field, $value, $params, $data ) {
-		return empty( $data[ $field ] ) ?  false:true;
+		if ( ! isset( $data[ $field ] ) || trim( $data[ $field ] ) == '') {
+			return false;
+		}
+
+		return true;
 	}
 
 	//验证字段是否存在
 	public function required( $field, $value, $params, $data ) {
-		return isset( $data[ $field ] ) ? true : false;
+		if ( ! isset( $data[ $field ] ) || trim( $data[ $field ] ) == '') {
+			return false;
+		}
+
+		return true;
 	}
 
 	//验证码验证
