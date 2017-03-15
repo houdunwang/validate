@@ -22,7 +22,7 @@ class VaAction {
 
 	//验证字段是否存在
 	public function required( $field, $value, $params, $data ) {
-		if ( ! isset( $data[ $field ] ) || $data[ $field ] == '' ) {
+		if ( ! isset( $data[ $field ] ) || empty( $data[ $field ] ) ) {
 			return false;
 		}
 
