@@ -116,7 +116,7 @@ class Base extends VaAction {
 						exit;
 					case 'show':
 						View::with( 'errors', $errors );
-						echo View::make( Config::get( 'validate.template' ) );
+						echo View::make( Config::get( 'validate.template' ) )->toString();
 						exit;
 					case 'default':
 						return false;
