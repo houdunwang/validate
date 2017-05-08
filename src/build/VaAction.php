@@ -10,12 +10,14 @@
 
 namespace houdunwang\validate\build;
 
+use houdunwang\code\Code;
+use houdunwang\db\Db;
+
 class VaAction
 {
     //字段为空时验证失败
     public function isnull($field, $value, $params, $data)
     {
-
         if ( ! isset($data[$field]) || $data[$field] == '') {
             return false;
         }
@@ -36,10 +38,7 @@ class VaAction
     //验证码验证
     public function captcha($field, $value, $params, $data)
     {
-        $post = Request::post();
-
-        return isset($post[$field])
-            && strtoupper($post[$field]) == \Code::get();
+        return isset($data[$field]) && strtoupper($data[$field]) == Code::get();
     }
 
     //存在字段时验证失败
@@ -148,7 +147,7 @@ class VaAction
     public function range($name, $value, $params)
     {
         //用户名长度
-        $len = mb_strlen($value, 'utf-8');
+        $len    = mb_strlen($value, 'utf-8');
         $params = explode(',', $params);
         if ($len >= $params[0] && $len <= $params[1]) {
             return true;

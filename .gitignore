@@ -2,6 +2,5 @@
 .DS_Store
 /vendor
 composer.lock
-view/
-storage/
-resource/
+/tests/storage
+/resource

@@ -12,6 +12,8 @@ namespace houdunwang\validate\build;
 
 use Closure;
 use houdunwang\config\Config;
+use houdunwang\request\Request;
+use houdunwang\response\Response;
 use houdunwang\session\Session;
 use houdunwang\validate\Validate;
 use houdunwang\view\View;
@@ -40,7 +42,8 @@ class Base extends VaAction
      */
     public function make($validates, array $data = [])
     {
-        $data = $data ? $data : $_POST;
+        $this->error = [];
+        $data        = $data ? $data : Request::post();
 
         foreach ($validates as $validate) {
             //验证条件
@@ -70,7 +73,6 @@ class Base extends VaAction
             }
             //表单值
             $value = isset($data[$validate[0]]) ? $data[$validate[0]] : '';
-
             //验证规则
             if ($validate[1] instanceof Closure) {
                 $method = $validate[1];
@@ -123,23 +125,19 @@ class Base extends VaAction
         Session::flash('errors', $errors);
         //验证返回信息处理
         if (count($errors) > 0) {
-            if (IS_AJAX) {
+            if (Request::isAjax()) {
                 $res = ['valid' => 0, 'message' => $errors];
                 die(json_encode($res, JSON_UNESCAPED_UNICODE));
             } else {
                 switch (Config::get('validate.dispose')) {
                     case 'redirect':
-                        echo '<script>location.href="'.$_SERVER['HTTP_REFERER']
-                            .'";</script>';
-                        exit;
+                        header("Location:".$_SERVER['HTTP_REFERER']);
+                        die;
                     case 'show':
-                        View::with('errors', $errors);
-                        echo View::make(Config::get('validate.template'))
-                            ->toString();
-                        exit;
-                    case 'default':
+                        $template = Config::get('validate.template');
+                        die(View::with('errors', $errors)->make($template));
+                    default:
                         return false;
-                        break;
                 }
             }
         }
