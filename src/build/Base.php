@@ -44,28 +44,25 @@ class Base extends VaAction
     {
         $this->error = [];
         $data        = $data ? $data : Request::post();
-
         foreach ($validates as $validate) {
+            //字段名
+            $fieldName = $validate[0];
+            //初始字段错误提示信息
+            if ( ! isset($this->error[$fieldName])) {
+                $this->error[$fieldName] = '';
+            }
             //验证条件
-            $validate[3] = isset($validate[3]) ? $validate[3]
-                : Validate::MUST_VALIDATE;
-            if ($validate[3] == Validate::EXISTS_VALIDATE
-                && ! isset($data[$validate[0]])
-            ) {
+            $validate[3] = isset($validate[3]) ? $validate[3] : Validate::MUST_VALIDATE;
+
+            if ($validate[3] == Validate::EXISTS_VALIDATE && ! isset($data[$validate[0]])) {
                 continue;
-            } else if ($validate[3] == Validate::VALUE_VALIDATE
-                && empty($data[$validate[0]])
-            ) {
+            } else if ($validate[3] == Validate::VALUE_VALIDATE && empty($data[$validate[0]])) {
                 //不为空时处理
                 continue;
-            } else if ($validate[3] == Validate::VALUE_NULL
-                && ! empty($data[$validate[0]])
-            ) {
+            } else if ($validate[3] == Validate::VALUE_NULL && ! empty($data[$validate[0]])) {
                 //值为空时处理
                 continue;
-            } else if ($validate[3] == Validate::NO_EXISTS_VALIDATE
-                && isset($data[$validate[0]])
-            ) {
+            } else if ($validate[3] == Validate::NO_EXISTS_VALIDATE && isset($data[$validate[0]])) {
                 //值为空时处理
                 continue;
             } else if ($validate[3] == Validate::MUST_VALIDATE) {
@@ -78,7 +75,7 @@ class Base extends VaAction
                 $method = $validate[1];
                 //闭包函数
                 if ($method($value) !== true) {
-                    $this->error[] = $validate[2];
+                    $this->error[$fieldName] = $validate[2].PHP_EOL;
                 }
             } else {
                 $actions = explode('|', $validate[1]);
@@ -91,7 +88,7 @@ class Base extends VaAction
                         if ($this->$method($validate[0], $value, $params, $data)
                             !== true
                         ) {
-                            $this->error[] = $validate[2];
+                            $this->error[$fieldName] = $validate[2];
                         }
                     } else if (isset($this->validate[$method])) {
                         $callback = $this->validate[$method];
@@ -100,7 +97,7 @@ class Base extends VaAction
                             if ($callback($validate[0], $value, $params, $data)
                                 !== true
                             ) {
-                                $this->error[] = $validate[2];
+                                $this->error[$fieldName] = $validate[2];
                             }
                         }
                     }
