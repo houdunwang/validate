@@ -104,6 +104,7 @@ class Base extends VaAction
                 }
             }
         }
+        $this->error = array_filter($this->error);
 
         //验证返回信息处理
         return $this->respond($this->error);
@@ -118,14 +119,14 @@ class Base extends VaAction
      */
     public function respond(array $errors)
     {
-        //错误信息记录
-        Session::flash('errors', $errors);
         //验证返回信息处理
         if (count($errors) > 0) {
             if (Request::isAjax()) {
-                $res = ['valid' => 0, 'message' => $errors];
+                $res = ['valid' => 0, 'message' => implode('<br/>',$errors)];
                 die(json_encode($res, JSON_UNESCAPED_UNICODE));
             } else {
+                //错误信息记录
+                Session::flash('errors', $errors);
                 switch (Config::get('validate.dispose')) {
                     case 'redirect':
                         header("Location:".$_SERVER['HTTP_REFERER']);
