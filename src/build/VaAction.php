@@ -62,8 +62,7 @@ class VaAction
     //邮箱验证
     public function email($name, $value, $params)
     {
-        $preg
-            = "/^([a-zA-Z0-9_\-\.])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/i";
+        $preg = "/^([a-zA-Z0-9_\-\.])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{1,3}){1,2})$/i";
         if (preg_match($preg, $value)) {
             return true;
         }

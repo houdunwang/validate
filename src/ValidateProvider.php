@@ -23,11 +23,8 @@ class ValidateProvider extends Provider
 
     public function register()
     {
-        $this->app->single(
-            'Validate',
-            function () {
-                return new Validate();
-            }
-        );
+        $this->app->single('Validate', function () {
+            return Validate::single();
+        });
     }
 }

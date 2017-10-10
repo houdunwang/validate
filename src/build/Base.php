@@ -47,13 +47,15 @@ class Base extends VaAction
         foreach ($validates as $validate) {
             //字段名
             $fieldName = $validate[0];
+            if ( ! isset($this->error[$fieldName])) {
+                $this->error[$fieldName] = '';
+            }
             //初始字段错误提示信息
             if ( ! isset($this->error[$fieldName])) {
                 $this->error[$fieldName] = '';
             }
             //验证条件
             $validate[3] = isset($validate[3]) ? $validate[3] : Validate::MUST_VALIDATE;
-
             if ($validate[3] == Validate::EXISTS_VALIDATE && ! isset($data[$validate[0]])) {
                 continue;
             } else if ($validate[3] == Validate::VALUE_VALIDATE && empty($data[$validate[0]])) {
@@ -85,22 +87,19 @@ class Base extends VaAction
                     $params = isset($info[1]) ? $info[1] : '';
                     if (method_exists($this, $method)) {
                         //类方法验证
-                        if ($this->$method($validate[0], $value, $params, $data)
-                            !== true
-                        ) {
-                            $this->error[$fieldName] = $validate[2];
+                        if ($this->$method($validate[0], $value, $params, $data) !== true) {
+                            $this->error[$fieldName] .= '<br/>'.$validate[2];
                         }
                     } else if (isset($this->validate[$method])) {
                         $callback = $this->validate[$method];
                         if ($callback instanceof Closure) {
                             //闭包函数
-                            if ($callback($validate[0], $value, $params, $data)
-                                !== true
-                            ) {
+                            if ($callback($validate[0], $value, $params, $data) !== true) {
                                 $this->error[$fieldName] = $validate[2];
                             }
                         }
                     }
+                    $this->error[$fieldName] = trim($this->error[$fieldName],'<br/>');
                 }
             }
         }
@@ -122,7 +121,7 @@ class Base extends VaAction
         //验证返回信息处理
         if (count($errors) > 0) {
             if (Request::isAjax()) {
-                $res = ['valid' => 0, 'message' => implode('<br/>',$errors)];
+                $res = ['valid' => 0, 'message' => implode('<br/>', $errors)];
                 die(json_encode($res, JSON_UNESCAPED_UNICODE));
             } else {
                 //错误信息记录
