@@ -18,7 +18,7 @@ class VaAction
     //字段为空时验证失败
     public function isnull($field, $value, $params, $data)
     {
-        if ( ! isset($data[$field]) || $data[$field] == '') {
+        if ( ! isset($data[$field]) || empty($data[$field])) {
             return false;
         }
 
