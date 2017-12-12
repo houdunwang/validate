@@ -28,7 +28,7 @@ class VaAction
     //验证字段是否存在
     public function required($field, $value, $params, $data)
     {
-        if ( ! isset($data[$field]) || empty($data[$field])) {
+        if ( ! isset($data[$field])) {
             return false;
         }
 
@@ -92,7 +92,8 @@ class VaAction
     //最大长度验证
     public function maxlen($name, $value, $params)
     {
-        if (mb_strlen($value, 'utf-8') <= $params) {
+        $len = mb_strlen(trim($value), 'utf-8');
+        if ($len <= $params) {
             return true;
         }
     }
@@ -100,7 +101,8 @@ class VaAction
     //最小长度验证
     public function minlen($name, $value, $params)
     {
-        if (mb_strlen($value, 'utf-8') >= $params) {
+        $len = mb_strlen(trim($value), 'utf-8');
+        if ($len >= $params) {
             return true;
         }
     }
